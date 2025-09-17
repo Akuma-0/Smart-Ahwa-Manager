@@ -15,6 +15,126 @@ This app allows an ahwa owner to efficiently manage customer orders, track popul
 - ✅ **Sales Reporting**: Generate reports of top-selling drinks and total revenue
 - ✅ **Drink Types**: Support for Coffee, Tea, and Hibiscus Tea
 
+## 🏗️ System Architecture & Workflow
+
+### Class Interaction Diagram
+
+```mermaid
+graph TD
+    A[👤 Client/User] --> B[OrderManagement]
+    A --> C[SalesReportGenerator]
+
+    B --> D[OrderRepository Interface]
+    C --> D
+
+    D --> E[Dashboard Implementation]
+
+    F[Order] --> G[Product Abstract]
+
+    G --> I[Coffee]
+    G --> J[Tea]
+    G --> K[HibiscusTea]
+
+    %% Composition relationships - Only Product has Extra, not Order
+    G -.->|"has-a (composition)"| H[Extra]
+    I -.->|"can have"| H
+    J -.->|"can have"| H
+    K -.->|"can have"| H
+
+    L[Helper Functions] --> M[calculateTotalSales]
+    L --> N[getTopSellingDrink]
+
+    C --> L
+
+    style A fill:#2196F3,stroke:#0D47A1,stroke-width:3px,color:#ffffff
+    style D fill:#9C27B0,stroke:#4A148C,stroke-width:2px,color:#ffffff
+    style E fill:#4CAF50,stroke:#1B5E20,stroke-width:2px,color:#ffffff
+    style G fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#ffffff
+    style B fill:#607D8B,stroke:#263238,stroke-width:2px,color:#ffffff
+    style C fill:#795548,stroke:#3E2723,stroke-width:2px,color:#ffffff
+    style F fill:#E91E63,stroke:#880E4F,stroke-width:2px,color:#ffffff
+    style H fill:#00BCD4,stroke:#006064,stroke-width:2px,color:#ffffff
+    style I fill:#CDDC39,stroke:#33691E,stroke-width:2px,color:#000000
+    style J fill:#CDDC39,stroke:#33691E,stroke-width:2px,color:#000000
+    style K fill:#CDDC39,stroke:#33691E,stroke-width:2px,color:#000000
+    style L fill:#FFC107,stroke:#FF6F00,stroke-width:2px,color:#000000
+    style M fill:#8BC34A,stroke:#33691E,stroke-width:2px,color:#ffffff
+    style N fill:#8BC34A,stroke:#33691E,stroke-width:2px,color:#ffffff
+```
+
+### Workflow Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant OrderManagement
+    participant Dashboard
+    participant Order
+    participant Product
+    participant SalesGenerator
+    participant Helpers
+
+    Note over Client,Helpers: 1. Adding an Order
+    Client->>OrderManagement: addOrder(order)
+    OrderManagement->>Dashboard: addOrder(order)
+    Dashboard->>Dashboard: pendingOrders.add(order)
+
+    Note over Client,Helpers: 2. Completing an Order
+    Client->>OrderManagement: markOrderAsCompleted(order)
+    OrderManagement->>Dashboard: markOrderAsCompleted(order)
+    Dashboard->>Dashboard: pendingOrders.remove(order)
+    Dashboard->>Order: order.isCompleted = true
+    Dashboard->>Dashboard: completedOrders.add(order)
+
+    Note over Client,Helpers: 3. Generating Sales Report
+    Client->>SalesGenerator: generateReport()
+    SalesGenerator->>Helpers: calculateTotalSales(repository)
+    Helpers->>Dashboard: getCompletedOrders()
+    Dashboard-->>Helpers: List<Order>
+    SalesGenerator->>Helpers: getTopSellingDrink(repository)
+    Helpers->>Dashboard: getCompletedOrders()
+    Dashboard-->>Helpers: List<Order>
+    Helpers-->>SalesGenerator: topDrink
+    SalesGenerator-->>Client: SalesReport
+```
+
+### Data Flow Architecture
+
+```mermaid
+flowchart LR
+    subgraph "📋 Models Layer"
+        O[Order]
+        P[Product]
+        E[Extra]
+        R[SalesReport]
+    end
+
+    subgraph "🔧 Service Layer"
+        OM[OrderManagement]
+        SG[SalesReportGenerator]
+    end
+
+    subgraph "💾 Repository Layer"
+        OR[OrderRepository Interface]
+        D[Dashboard Implementation]
+    end
+
+    subgraph "⚡ Helper Layer"
+        H[Pure Functions]
+    end
+
+    OM --> OR
+    SG --> OR
+    OR --> D
+    SG --> H
+    H --> OR
+
+    %% Correct model relationships
+    O -.-> P
+    P -.-> E
+    SG -.-> R
+```
+
 ## 🔥 OOP Principles Implementation
 
 ### 1. **Inheritance** 🧬
@@ -81,7 +201,40 @@ class Order {
 - Controlled access to object state
 - Clear interface boundaries
 
-### 4. **Abstraction** 🎭
+### 4. **Composition** 🧩
+
+**Location**: `/lib/models/product.dart` and `/lib/models/extra.dart`
+
+```dart
+// Product HAS-A list of Extra objects (composition)
+abstract class Product {
+  late double price;
+  List<Extra>? extras;  // Composition relationship
+  Product({this.extras});
+}
+
+// Extra is a separate, independent class
+class Extra {
+  final String name;
+  final double price;
+  Extra({required this.name, required this.price});
+}
+
+// Usage: Building complex objects from simpler ones
+Coffee coffee = Coffee(extras: [
+  Extra(name: "extra mint", price: 2.0),
+  Extra(name: "ya rais special", price: 0.0)
+]);
+```
+
+**Benefits**:
+
+- **"Has-A" relationship**: Product contains Extra objects but doesn't inherit from them
+- **Flexibility**: Can add/remove extras dynamically at runtime
+- **Independence**: Extra class exists independently and can be reused
+- **Special Instructions**: Perfect for handling "extra mint, ya rais" requirements
+
+### 5. **Abstraction** 🎭
 
 **Location**: `/lib/models/product.dart` and `/lib/repositories/order_repository.dart`
 
@@ -156,8 +309,8 @@ double price = OrderPriceCalculator.calculatePrice(order);
 ```dart
 abstract class OrderRepository {
   List<Order> getCompletedOrders();
-  List<Order> getPendingOrders();    
-  void addOrder(Order order);        
+  List<Order> getPendingOrders();
+  void addOrder(Order order);
   void markOrderAsCompleted(Order order);
 }
 ```
@@ -189,7 +342,6 @@ class SalesReportGenerator {
 - Reduced coupling between components
 
 ---
-
 
 ## 📁 Project Structure
 
