@@ -12,7 +12,7 @@ Watch the Smart Ahwa Manager in action! This demo showcases the core functionali
 
 📺 **[View Demo Video](https://drive.google.com/file/d/1cgMiT4Ygc5QvN4MF_Kk8M7MgjhWYLP2E/view?usp=drive_link)**
 
-*The demo video demonstrates order management, dashboard functionality, and sales reporting features in real-time.*
+_The demo video demonstrates order management, dashboard functionality, and sales reporting features in real-time._
 
 ## �🎯 Features
 
