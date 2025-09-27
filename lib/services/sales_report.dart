@@ -1,7 +1,7 @@
-import 'package:smart_ahwa_manager/helpers/calculate_total_sales.dart';
-import 'package:smart_ahwa_manager/helpers/get_top_selling_ite.dart';
-import 'package:smart_ahwa_manager/models/report.dart';
-import 'package:smart_ahwa_manager/repositories/order_repository.dart';
+import 'package:smart_ahwa_manager_dart/helpers/calculate_total_sales.dart';
+import 'package:smart_ahwa_manager_dart/helpers/get_top_selling_item.dart';
+import 'package:smart_ahwa_manager_dart/models/report.dart';
+import 'package:smart_ahwa_manager_dart/repositories/order_repository.dart';
 
 class SalesReportGenerator {
   final OrderRepository orderRepository;

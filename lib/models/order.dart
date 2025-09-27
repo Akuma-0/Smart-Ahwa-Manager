@@ -1,4 +1,4 @@
-import 'package:smart_ahwa_manager/models/product.dart';
+import 'package:smart_ahwa_manager_dart/models/product.dart';
 
 class Order {
   final String id;

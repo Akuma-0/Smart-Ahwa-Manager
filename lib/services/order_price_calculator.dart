@@ -1,4 +1,4 @@
-import 'package:smart_ahwa_manager/models/order.dart';
+import 'package:smart_ahwa_manager_dart/models/order.dart';
 
 class OrderPriceCalculator {
   static double calculatePrice(Order order) {

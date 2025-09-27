@@ -1,5 +1,5 @@
-import 'package:smart_ahwa_manager/models/order.dart';
-import 'package:smart_ahwa_manager/repositories/order_repository.dart';
+import 'package:smart_ahwa_manager_dart/models/order.dart';
+import 'package:smart_ahwa_manager_dart/repositories/order_repository.dart';
 
 class OrderManagement {
 final OrderRepository _orderRepository;
@@ -10,7 +10,7 @@ final OrderRepository _orderRepository;
     _orderRepository.addOrder(order);
   }
 
-  void markOrderAsCompleted(Order order) {
-    _orderRepository.markOrderAsCompleted(order);
+  void markOrderAsCompleted(int orderId) {
+    _orderRepository.markOrderAsCompleted(orderId);
   }
 }
