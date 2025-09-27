@@ -6,7 +6,15 @@ A Flutter application designed to demonstrate **Object-Oriented Programming (OOP
 
 This app allows an ahwa owner to efficiently manage customer orders, track popular items, and generate sales reports. It showcases professional software architecture principles including inheritance, polymorphism, dependency injection, and clean code design.
 
-## 🎯 Features
+## � Demo Video
+
+Watch the Smart Ahwa Manager in action! This demo showcases the core functionality and user interface of the application:
+
+📺 **[View Demo Video](https://drive.google.com/file/d/1cgMiT4Ygc5QvN4MF_Kk8M7MgjhWYLP2E/view?usp=drive_link)**
+
+*The demo video demonstrates order management, dashboard functionality, and sales reporting features in real-time.*
+
+## �🎯 Features
 
 - ✅ **Order Management**: Add orders with customer names and drink selections
 - ✅ **Special Instructions**: Handle extras like "extra mint, ya rais" with pricing
